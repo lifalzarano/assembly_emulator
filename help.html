@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+
+<style>
+body {
+	background:#CCC;
+	color:#000;	
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+p {
+	margin: 0px;
+}
+#code {
+	margin-top: 8px;
+	margin-bottom:10px;
+	font-family:"Courier New", Courier, monospace;
+	color: #006;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<h4>Using this site is easy! </h4>
+<p> To run assembly code, type your code in the box and press 'Run!'. Any results will appear in the console in the middle of the page. This console can be moved or resized, by the way - just drag it around or pull on the edges. </p>
+<br />
+
+<h4> Syntax </h4>
+<p> Commands do, however, need to have specific syntax. Everything must be separated by spaces: </p>
+<p id="code">
+    LDR R0, =42
+</p>
+<p> is valid, while</p>
+<p id="code">
+    LDR R0,=42
+    <br />
+    ADDR0, R1,R2
+</p>
+<p>are not. </p>
+<br />
+
+<p> Proper spacing is crucial in push and pop statements in particular. The brackets that enclose the list of registers to be pushed/popped must be separated by spaces from said registers: </p>
+<p id="code">
+    PUSH { R0, R1, R2 }
+    <br />
+	POP { R0, R1, R2 }
+</p>
+
+<h4> Comments </h4>
+<p> To comment out a line, place a semi-colon at the very front: </p>
+<p id="code">
+    ;MUL R0, R1, R2 
+</p>
+
+<h4> Loading Values From C Code </h4>
+<p> It is possible to specify variables of various sizes in C, and then use these variables in Assembly. The following types can be used: </p>
+<p id="code">
+	// Spaces aren't too particular in the C code section.
+    <br />
+    int x = 2;
+    <br />
+    // This is equally valid as above - spaces around the equal sign don't matter.
+    <br />
+    int x=17;    
+    <br />
+    <br />
+    
+    // Only stores 16 bits - sign extends to 32 bits
+    <br />
+	short s1 = 12;
+    <br />
+	short int s2 = 21;
+    <br />
+	<br />
+    
+    // Load a regular 32-bit value
+    <br />
+    int x = 42;
+    <br />
+    long y = -42;
+    <br />
+	long int z = 42;
+    <br />
+	<br />
+
+	// Load a 64-bit value
+    <br />
+	long long x = 900000000000;
+    <br />
+    long long int y = 200000000000;
+    <br />
+	<br />
+	
+    // Signed or unsigned can be specified before any data type
+    <br />
+	unsigned int u32 = 25;		
+    <br />
+    signed long s64 = -12;
+    <br />
+    <br />
+</p>
+<p>*Note: specifying signed or unsigned won't make a difference. The binary value of the number specified is what gets loaded, so it doesn't have any effect.</p>
+<br />
+
+
+<p> To load a C-specified value into a register, type anything like the following into the Assembly Code section: </p>
+<p id="code">
+    LDR R0, u32
+    <br />
+	LDRH R1, u16
+    <br />
+	LDRSH R2, s16
+</p>
+<p> For a full reference on how each variation of LDR works, see the 'Command Reference' section. </p>
+
+<br />
+
+
+</body>
+</html>

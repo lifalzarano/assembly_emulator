@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Example Code</title>
+
+<style>
+body {
+	background:#CCC;
+	color:#000;	
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+p {
+	margin: 0px;
+}
+#code {
+	margin-top: 8px;
+	margin-bottom:10px;
+	font-family:"Courier New", Courier, monospace;
+	color: #006;
+}
+</style>
+
+</head>
+
+<body>
+
+<h4>A Simple Example: </h4>
+<p id="code">
+	LDR R0, =2       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Load 2 into R0
+    <br />
+    ADD R1, R0, #4   &nbsp;&nbsp;; Add 4 to value in R0, store result in Ra
+    <br />
+    PR R1            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Print binary contents of R1
+    <br />
+    uVal R1          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; Print unsigned value of R1
+</p>
+<br />
+<p> Which would output the following: </p>
+<p id="code">
+	00000000000000000000000000000110
+    <br />
+    6
+</p>
+<br />
+
+<h4>A Compare Case with Branching: </h4>
+<p> This example loads 2 into a register, and compares that to 4. If 2 is greater than 4, register R1 will be loaded with the value 7; else, it'll be loaded with the value 42. The result of this operation is printed at the very end. </p>
+<p id="code">
+	LDR R0, =2   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Load 2 into R0
+    <br />
+    CMP R0, #4   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Compare 2 to 4
+    <br />
+    BGE Else     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; If R0 is greater than or equal to 4, go to 'Else'
+    <br />
+    LDR R1, =42  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; Load 42 into R1 if R0 < 4
+    <br />
+    B End        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Go to End
+    <br />
+	Else:
+    <br />
+	LDR R1, =7   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Load 7 into R1 if R0 >= 4
+    <br />
+	End:
+    <br />
+    uVal R1      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Print unsigned value of R1 to console
+    
+
+</p>
+<br />
+<p> Which would output the following: </p>
+<p id="code">
+	42
+</p>
+<br />
+
+
+<h4>A Simple Loop: </h4>
+<p> This example demonstrates how to make a loop that outputs the binary values between 0 and 10. </p>
+<p id="code">
+	LDR R0, =0   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Load 2 into R0
+    <br />
+    Top:
+    <br />
+    PR R0      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Print current binary contents of R0
+    <br />
+    CMP R0, #10   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; Compare R0 to 10
+    <br />
+    BGE End     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; If R0 is greater than or equal to 10, go to 'End'
+    <br />
+    ADD R0, R0, #1  &nbsp;&nbsp;; Increment value in R0 by 1
+    <br />
+    B Top        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Go to Top
+    <br />
+	End:
+    <br />
+    
+
+</p>
+<br />
+<p> Which would output the following: </p>
+<p id="code">
+	00000000000000000000000000000000
+    <br />
+    00000000000000000000000000000001
+    <br />
+    00000000000000000000000000000010
+    <br />
+    00000000000000000000000000000011
+    <br />
+    00000000000000000000000000000100
+    <br />
+    00000000000000000000000000000101
+    <br />
+    00000000000000000000000000000110
+    <br />
+    00000000000000000000000000000111
+    <br />
+    00000000000000000000000000001000
+    <br />
+    00000000000000000000000000001001
+    <br />
+    00000000000000000000000000001010
+    <br />
+</p>
+<br />
+
+<h4>A Simple IT Block: </h4>
+<p> This example demonstrates how to write an IT block that will load 55 into a register if 20 is greater than 42, or load 33 otherwise. </p>
+<p id="code">
+	LDR R0, =20
+    <br />
+	CMP R0, #42
+    <br />
+	ITE GE
+    <br />
+	LDRGE R1, =55
+    <br />
+	LDRLT R1, =33
+    <br />
+	uVal R1
+    <br />
+</p>
+<p> Which would output the following: </p>
+<p id="code">
+	33
+    <br />
+</p>
+
+</body>
+</html>
