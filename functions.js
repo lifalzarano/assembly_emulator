@@ -20,6 +20,7 @@ var GE = false;
 var LE = false;
 var LT = false;
 
+// Global flags for zero, carry, negative, and overflow
 var Z = 0;
 var C = 0;
 var N = 0;
@@ -345,8 +346,8 @@ function compCmd(comp) {
 	}
 }
 
-// This function calculates the signed quotient of two binary numbers. It gets the
-// signed value of each (an integer), divides them, converts the result to binary,
+// This function calculates the unsigned quotient of two binary numbers. It gets the
+// unsigned value of each (an integer), divides them, converts the result to binary,
 // and stores said result in Rs. 
 function DIV(Rs, Ra, Rb) {
 	var a = uVal(Ra);
