@@ -1,0 +1,77 @@
+@charset "utf-8";
+/* CSS Document */
+
+#topBar {
+	width: auto;
+	height: 26px; 
+	padding: 10px;
+	padding-right: 30px;
+	background: #484848;
+	box-shadow:0px 0px 10px #000;	
+	text-align: right;
+}
+
+#codeDiv {
+	width: auto;
+	height: 610px;
+	margin: 0px;
+	padding: 30px; 
+	border-right: 3px solid #000;
+	background: #D7D7D7;
+	color: #000;
+	float: left;
+}
+
+#output {
+	width: 600px;
+	height: 350px;
+	margin-top: 110px;
+	margin-right: 130px;
+	padding: 20px; 
+	border: 1px solid #FFF;
+	border-radius: 15px;
+	float: right;
+	background: #000;
+	color:#fff;
+	overflow: visible;
+}
+
+#cCode {
+	width: 600px;
+	height: auto;
+	margin: 30px;
+	padding: 30px; 
+	border: 1px solid #FFF;
+	border-radius: 15px;
+	background: #000;
+	/*float: left;*/
+}
+
+.ui-resizable-helper { 
+	border: 1px dotted #0CF; 
+}
+
+p {margin-top:0px;}
+
+a:link {color:#009FFF; text-decoration: none;}      /* unvisited link */
+a:visited {color:#009FFF;}  /* visited link */
+a:hover {color:#FF00FF;}  /* mouse over link */
+a:active {color:#0000FF;}  /* selected link */
+
+body {
+	font-family: "Courier New";
+	color: #009FFF;
+	background: #0A0A12;
+	/*background:url(bg2.png);*/
+	background-size: contain;
+	margin: 0px 0px 0px 0px;
+	padding: 0px;	
+	overflow: hidden;
+}
+
+#mainContent {
+	width: auto;
+	height: 800px;
+	margin: 0 auto;
+	overflow: hidden;
+}

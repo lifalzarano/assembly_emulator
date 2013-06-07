@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Command Reference</title>
+
+<link href="popup_css.css" rel="stylesheet" type="text/css" />
+
+<style>
+body {
+	background:#CCC;
+	color:#000;	
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+p {
+	margin: 0px;
+}
+#code {
+	margin-top: 8px;
+	margin-bottom:10px;
+	font-family:"Courier New", Courier, monospace;
+	color: #006;
+}
+</style>
+
+</head>
+
+<body>
+<h3> List of Possible Commands </h3>
+<p> Most of the ARM Assembly commands have been implemented. The syntax for each available command is listed below. For further information, see the <a href="http://infocenter.arm.com/help/index.jsp?topic=%2Fcom.arm.doc.dui0489c%2FCIHDDCIF.html" target="_new">ARM reference site</a>. </p>
+
+<h4>Special Commands</h4>
+<p>These aren't actual ARM functions, but it would be impossible to know what's going on if they didn't exist. </p>
+<br />
+
+<p>Print binary contents of one register: </p>
+<p id="code">
+    PR R0
+</p>
+<br />
+
+<p>Print unsigned value of contents of one register: </p>
+<p id="code">
+    uVal R0
+</p>
+<br />
+
+<p>Print unsigned 64-bit value contained in two registers: </p>
+<p id="code">
+    uVal64 R1, R0
+</p>
+<p> Where R1 is the most significant half and R0 the least significant. </p>
+<br />
+
+<p>Print signed value of contents of one register: </p>
+<p id="code">
+    sVal R0
+</p>
+<br />
+
+<p>Print signed 64-bit value contained in two registers: </p>
+<p id="code">
+    sVal64 R1, R0
+</p>
+<p> Where R1 is the most significant half and R0 the least significant. </p>
+<br />
+
+<p>Print contents in stack: </p>
+<p id="code">
+    PS
+</p>
+<br />
+
+<p>Print values of flags: </p>
+<p id="code">
+    PF
+</p>
+
+
+<h4 > Move, Add, Subtract </h4>
+<p>Copy value in one register to another, or binary value of a number (can be negative): </p>
+<p id="code">
+    MOV R0, R2 
+    <br />
+    MOV R0, #34 
+</p>
+<br />
+
+
+<p> Add two registers or register and a number: </p>
+<p id="code">
+    ADDS R0, R0, R0
+    <br />
+    ADD R0, R0, #42
+</p>
+<br />
+
+<p> Add two registers or register and a number with carry: </p>
+<p id="code">
+	ADC R0, R0, R0
+    <br />
+	ADCS R1, R0, #42
+</p>
+<br />
+
+
+<p> Subract last register or numeric value from middle register: </p>
+<p id="code">
+    SUB R2, R1, R0
+    <br />
+    SUBS R2, R1, #42
+</p>
+<br />
+
+
+<p> Subract value in middle register from value in last register: </p>
+<p id="code">
+    RSBS R2, R1, R0
+    <br />
+    RSB R2, R1, #42
+</p>
+<br />
+
+
+<p> Negate a value (converts to two's complement): </p>
+<p id="code">
+    NEG R2, R0
+</p>
+<p> *Notes: Always updates flags. Cannot use numeric value in place of second register. </p>
+
+
+
+<h4 > Compare Instructions</h4>
+<p>Compare: </p>
+<p id="code">
+    CMP R0, R2 
+    <br />
+    CMP R0, #42 
+</p>
+
+
+<h4 > Bitwise Instructions </h4>
+
+<p>'And' one value with another: </p>
+<p id="code">
+    AND R2, R1, R0
+    <br />
+    AND R2, R1, #42
+</p>
+<br />
+
+<p>'Or' one value with another: </p>
+<p id="code">
+    ORR R2, R1, R0
+    <br />
+    ORR R2, R1, #42
+</p>
+<br />
+
+<p>'Exclusive or' one value with another: </p>
+<p id="code">
+    EOR R2, R1, R0
+    <br />
+    EOR R2, R1, #42
+</p>
+<br />
+
+<p>Calculate result of R1 & ~R0 or ~[numeric value] </p>
+<p id="code">
+    BIC R2, R1, R0
+    <br />
+    BIC R2, R1, #42
+</p>
+<br />
+
+<p>Calculate result of R1 or-not with the value of register or number specified  </p>
+<p id="code">
+    ORN R2, R1, R0
+    <br />
+    ORN R2, R1, #42
+</p>
+<br />
+
+<p>Copy ~R0 or ~42 to R2 </p>
+<p id="code">
+    MVN R2, R0
+    <br />
+    MVN R2, #42
+</p>
+<br />
+
+<h4 > Bitfield Instructions </h4>
+
+<p>Clear width number of bits, starting at lsb </p>
+<p id="code">
+    BFC R0, #lsb, #width
+</p>
+<br />
+
+<p>Replace width number of bits, starting at lsb, in R1 with bits from R0 (starting at index 0) </p>
+<p id="code">
+   	BFI R1, R0, #lsb, #width
+</p>
+<br />
+
+
+<h4 > Multiply/Divide </h4>
+
+<p>Standard multiply </p>
+<p id="code">
+    MUL R2, R1, R0
+    <br />
+    MUL R2, R1, #25
+</p>
+<br />
+
+<p>R3 = (R2*R1) + R0 </p>
+<p id="code">
+    MLA R3, R2, R1, R0
+</p>
+<br />
+
+
+<p> So yeah, there are many more functions that one can use - pretty much everything on our class's handout has been implemented. But typing all this up takes effort and I'm lazy. </p>
+
+</body>
+</html>
