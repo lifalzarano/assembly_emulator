@@ -33,7 +33,7 @@ function executeCode() {
 		var command = "";
 		
 		// Check to see if a conditional case has been stated
-		if (comp == "NE" || comp == "HI" || comp == "LS" || comp == "GT" || comp == "GE" || comp == "EQ" || comp == "LE" || comp == "LT") {
+		if (comp == "NE" || comp == "CS" || comp == "CC" || comp == "MI" || comp == "PL" || comp == "HI" || comp == "LS" || comp == "GT" || comp == "GE" || comp == "EQ" || comp == "LE" || comp == "LT") {
 			// If so, copy all but last two characters to command
 			for (var j = 0; j < len-2; j++) {
 				command += code[i][0].charAt(j);
@@ -271,7 +271,7 @@ function executeCode() {
 			}
 			continue;
 		}
-		if (command == "AND") {
+		if (command == "AND" || command == "ANDS") {
 			// Check for complete statement
 			if (!code[i][2] || !code[i][3] ) {
 				console+="Line "+(i+1)+": Incomplete AND statement <br />";
@@ -297,7 +297,11 @@ function executeCode() {
 			if (!temp) { return 0; }
 			
 			// Call and function  
-			AND(R[store], R[a1], temp);
+			if (command == "AND") {
+				AND(R[store], R[a1], temp, 0);
+			} else {
+				AND(R[store], R[a1], temp, 1);
+			}
 			continue;
 		}
 		if (command == "ASR" || command == "ASRS") {
@@ -1341,6 +1345,12 @@ function executeCode() {
 			// Get registers for numbers to be stored in
 			var a1 = code[i][2].charAt(1);
 			
+			var Ra = new Array(32);
+			Ra = checkRegister(code[i][2]);
+			if (!Ra) {
+				return 0;
+			}
+			
 			// Get binary value of second number to be multiplied. Could be integer or register,
 			// so call function to check and return binary value
 			var temp = new Array(32);
@@ -1350,9 +1360,9 @@ function executeCode() {
 			
 			// Call subtract function
 			if (command == "SUB") {
-				SUB(R[store], R[a1], temp, 0);
+				SUB(R[store], Ra, temp, 0);
 			} else {
-				SUB(R[store], R[a1], temp, 1);
+				SUB(R[store], Ra, temp, 1);
 			}
 			continue;
 		}
@@ -1441,7 +1451,21 @@ function executeCode() {
 
 			// Check that register has been defined. If not, return.
 			if (R[r][0] == undefined) {
-				console+="Register undefined, can't calculate signed value. <br />";
+				console+="Line "+(i+1)+": Register undefined, can't calculate signed value. <br />";
+				return;
+			}
+			
+			var val = sVal(R[r]);
+			console+=val+"<br/>";
+			
+			continue;
+		}
+		if (command == "sVal64" ) {
+			var r = code[i][1].charAt(1);
+
+			// Check that register has been defined. If not, return.
+			if (!R[r][0]) {
+				console+="Line "+(i+1)+": Register undefined, can't calculate signed value. <br />";
 				return;
 			}
 			
@@ -1580,7 +1604,7 @@ function doThings() {
 	var c = document.forms["mainForm"]["input"].value;	
 	// Place in global array called 'code', with each line in separate index
 	code = c.split("\n");
-	document.getElementById("results").innerHTML=""+c;
+	document.getElementById("results").innerHTML="Uh oh, something went wrong during interpretation. =[";
 
 	// For each line in code, split into new array of strings
 	for (var i = 0; i < code.length; i++) {

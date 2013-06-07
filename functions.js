@@ -20,7 +20,6 @@ var GE = false;
 var LE = false;
 var LT = false;
 
-// Global flags for zero, carry, negative, and overflow
 var Z = 0;
 var C = 0;
 var N = 0;
@@ -101,7 +100,7 @@ function ADD(Rs, Ra, Rb, s) {
 			Rs[i] = sum;
 		}
 	} 
-	//printRegister(Rs);
+		
 	if (s) {
 		setFlags(Rs);
 	} else {
@@ -110,10 +109,14 @@ function ADD(Rs, Ra, Rb, s) {
 }
 
 // This function AND's the values in Ra and Rb and stores them in Rs
-function AND(Rs, Ra, Rb) {
+function AND(Rs, Ra, Rb, s) {
 	var temp = new Array(32);
 	for (var i = 0; i < 32; i++) {
 		Rs[i] = Ra[i] & Rb[i];
+	}
+	
+	if (s) {
+		setFlags(Rs);
 	}
 }
 
@@ -253,24 +256,7 @@ function CLZ (Rs, Ra) {
 // for the result.
 function CMP(Ra, Rb) {
 	// Reset all conditional variables to false
-	NE = false;
-	CS = false;
-	CC = false;
-	MI = false;
-	PL = false;
-	VS = false;
-	VC = false;
-	HI = false;
-	LS = false;
-	GT = false;
-	GE = false;
-	LE = false;
-	LT = false;
-	GT = false;
-	GE = false;
-	EQ = false;
-	LE = false;
-	LT = false;
+	resetConditions();
 	
 	var Sa = sVal(Ra);			// signed value of Ra
 	var Sb = sVal(Rb);			// signed value of Rb
@@ -323,6 +309,24 @@ function compCmd(comp) {
 	if (comp == "NE") {
 		if (NE) { return true; }
 		else { return false; }
+	} else if (comp == "CS") {
+		if (CS) { return true; }
+		else { return false; }
+	} else if (comp == "CC") {
+		if (CC) { return true; }
+		else { return false; }
+	} else if (comp == "MI") {
+		if (HI) { return true; }
+		else { return false; }
+	} else if (comp == "PL") {
+		if (HI) { return true; }
+		else { return false; }
+	} else if (comp == "VS") {
+		if (HI) { return true; }
+		else { return false; }
+	} else if (comp == "VC") {
+		if (HI) { return true; }
+		else { return false; }
 	} else if (comp == "HI") {
 		if (HI) { return true; }
 		else { return false; }
@@ -341,13 +345,15 @@ function compCmd(comp) {
 	} else if (comp == "LT") {
 		if (LT) { return true; }
 		else { return false; }
+	} else if (comp == "AL") {
+		return true;
 	} else {
 		console += "Compare case not understood. <br/>";
 	}
 }
 
-// This function calculates the unsigned quotient of two binary numbers. It gets the
-// unsigned value of each (an integer), divides them, converts the result to binary,
+// This function calculates the signed quotient of two binary numbers. It gets the
+// signed value of each (an integer), divides them, converts the result to binary,
 // and stores said result in Rs. 
 function DIV(Rs, Ra, Rb) {
 	var a = uVal(Ra);
@@ -599,23 +605,6 @@ function ORN(Rs, Ra, Rb) {
 		Rs[i] = Ra[i] | temp[i];
 	}
 }
-
-// This function prints the binary contents of specified register
-function printRegister(Reg) {
-	if (Reg[0] == undefined) {
-		console+="Register undefined. <br />";
-		return;
-	}
-	for (var i = 0; i < Reg.length; i++) {
-		console += (Reg[i]);
-	}
-	console+= "<br/>";
-}
-
-function printFlags() {
-	console += "N: "+N+" Z: "+Z+" C: "+C+" V: "+V+"<br/>";
-}
-
 
 // This function pops a register from the bottom of the stack
 function POP(Ra) {	
@@ -906,26 +895,8 @@ function UXTH(Rs, Ra) {
 	MOV(Rs, temp);
 }
 
-// This function takes a value and turns it into its two's complement.
-// Coded by Aaron Chung (kind of)
-function twoComp(V0) {
-	var size = V0.length;
-	var V1 = new Array(size);
-	
-	for (var i = 0; i < size; i++) {
-		V1[i] = 0;
-	}
 
-	// negate all values in array
-	for (var i = 0; i < size; i++) {
-		V0[i] ^= 1;
-	}
-	
-	// add 1 to V0
-	getBinary(1, V1);
-	ADD(V0, V0, V1, 0);
-}
-
+// This function resets all the flags
 function clearFlags() {
 	N = 0;
 	Z = 0;
@@ -933,41 +904,28 @@ function clearFlags() {
 	V = 0;	
 }
 
-// This function calculates the signed value of the variable passed
-// as a parameter. 
-function sVal(Ra) {
+// This function checks a string to see if it contains a valid register
+function checkRegister(string) {
 	
-	var power = Ra.length-1;
-	var size = power+1;
-
-	var val = Ra[0]*Math.pow(2,power);
-	
-	for (var j = 1; j < size; j++) {
-		power--;
-		val -= Ra[j]*Math.pow(2,power);	
+	if (string.charAt(0) == 'R') {		
+		if (string.charAt(1) >= 0 && string.charAt(1) <= 9) {
+			var index = string.charAt(1);
+			if (!R[index]) {
+				console += "Register not defined.";
+				return 0;
+			}
+			return R[index];
+		}
+		console += "'"+string.charAt(0)+string.charAt(1)+"' is not a valid register.";
+	} else {
+		console += "Not a valid register.";
+		return 0;
 	}
-	val *= -1;
-
-	return val;
+	
 }
 
-
-
-// This function calculates the unsigned value of the variable passed
-// as a parameter and prints it to console.
-function uVal(Ra) {
-	var val = 0;
-	var power = 0;
-	
-	for (var i = 31; i >= 0; i--) {
-		val += Ra[i]*Math.pow(2,power);
-		power++;
-	}
-
-	return val;
-}
-
-
+// This function checks a string to see if contains a reference to a register
+// or to a number. 
 function getVal(Ra) {	
 	var temp = new Array(32);
 	var negative = false;
@@ -1042,6 +1000,47 @@ function loadVal(Ra) {
 	}
 }
 
+// This function resets all global condition variables to false
+function resetConditions() {
+	NE = false;
+	CS = false;
+	CC = false;
+	MI = false;
+	PL = false;
+	VS = false;
+	VC = false;
+	HI = false;
+	LS = false;
+	GT = false;
+	GE = false;
+	LE = false;
+	LT = false;
+	GT = false;
+	GE = false;
+	EQ = false;
+	LE = false;
+	LT = false;
+}
+
+// This function prints the values in the flags
+function printFlags() {
+	console += "N: "+N+" Z: "+Z+" C: "+C+" V: "+V+"<br/>";
+}
+
+// This function prints the binary contents of specified register
+function printRegister(Reg) {
+	if (Reg[0] == undefined) {
+		console+="Register undefined. <br />";
+		return;
+	}
+	for (var i = 0; i < Reg.length; i++) {
+		console += (Reg[i]);
+	}
+	console+= "<br/>";
+}
+
+
+// This function prints the contents of the stack
 function printStack() {
 	console += "------------------------ Stack ----------------------------- <br/>";
 	for (var i = 0; i < stackCount; i++) {
@@ -1060,6 +1059,107 @@ function setFlags(Rs) {
 	
 	// Update negative flag: if MSB is 1, N is set to 1
 	N = Rs[0];
+	
+	// Update the conditional variables	
+	updateConditions();
+}
+
+// This function calculates the signed value of the variable passed
+// as a parameter. 
+function sVal(Ra) {
+	
+	var power = Ra.length-1;
+	var size = power+1;
+
+	var val = Ra[0]*Math.pow(2,power);
+	
+	for (var j = 1; j < size; j++) {
+		power--;
+		val -= Ra[j]*Math.pow(2,power);	
+	}
+	val *= -1;
+
+	return val;
+}
+
+// This function takes a value and turns it into its two's complement.
+// Coded by Aaron Chung (kind of)
+function twoComp(V0) {
+	var size = V0.length;
+	var V1 = new Array(size);
+	
+	for (var i = 0; i < size; i++) {
+		V1[i] = 0;
+	}
+
+	// negate all values in array
+	for (var i = 0; i < size; i++) {
+		V0[i] ^= 1;
+	}
+	
+	// add 1 to V0
+	getBinary(1, V1);
+	ADD(V0, V0, V1, 0);
+}
+
+// This function updates the condition variables based on the contents of the flags
+function updateConditions() {
+	// First, reset all condition variables
+	resetConditions();
+	
+	// And set them
+	if (Z) {
+		EQ = true;
+	} else {
+		NE = true;
+	}
+	if (C) {
+		CS = true;
+	} else {
+		CC = true;
+	}
+	if (N) {
+		MI = true;
+	} else {
+		PL = true;
+	}
+	if (V) {
+		VS = true;
+	} else {
+		VC = true;
+	}
+	if (C && !Z) {
+		HI = true;
+	}
+	if (!C && Z) {
+		LS = true;
+	}
+	if (N == V) {
+		GE = true;
+	} else {
+		LT = true;
+	}	
+	if (Z == 0 && N == V) {
+		GT = true;
+	}
+	if (Z == 1 || N != V) {
+		LE = true;
+	}
+}
+
+// This function calculates the unsigned value of the variable passed
+// as a parameter and prints it to console.
+function uVal(Ra) {
+	var val = 0;
+	var power = 0;
+	var size = Ra.length - 1;
+	
+	for (var i = size; i >= 0; i--) {
+		val += Ra[i]*Math.pow(2,power);
+		power++;
+	}
+
+	return val;
 }
 
 /*
