@@ -1339,19 +1339,16 @@ function executeCode() {
 				return 0;
 			}
 			
-			// Get register to be stored in
+			// Get register where difference will be stored
 			var store = code[i][1].charAt(1);
 			
-			// Get registers for numbers to be stored in
-			var a1 = code[i][2].charAt(1);
-			
-			var Ra = new Array(32);
-			Ra = checkRegister(code[i][2]);
+			// Get register for minuend 
+			var Ra = getRegister(code[i][2], i);
 			if (!Ra) {
 				return 0;
 			}
 			
-			// Get binary value of second number to be multiplied. Could be integer or register,
+			// Get binary value of subtrahend. Could be integer or register,
 			// so call function to check and return binary value
 			var temp = new Array(32);
 			temp = getVal(code[i][3]);
@@ -1379,12 +1376,12 @@ function executeCode() {
 			}
 			
 			// Get registers where values will be stored
-			var s = code[i][1].charAt(1);
-			var t = code[i][2].charAt(1);			
+			var s = getRegister( code[i][1], i );
+			var t = getRegister( code[i][2], i );			
 			
 			// Get registers for numbers to be multiplied
-			var a = code[i][3].charAt(1);
-			var b = code[i][4].charAt(1);
+			var a = getRegister( code[i][3], i );
+			var b = getRegister( code[i][4], i );
 			
 			// Call unsigned multiply function
 			UMULL(R[s], R[t], R[a], R[b]);
@@ -1446,6 +1443,29 @@ function executeCode() {
 			
 			continue;
 		}
+		if (command == "uVal64" ) {
+			// Check for complete statement
+			if (!code[i][2]) {
+				console+="Line "+(i+1)+": Incomplete uVal64 statement";
+				return 0;
+			}
+			// Check that there are no extra arguments
+			if (code[i][3]) {
+				console+="Line "+(i+1)+": Extra token in uVal64 statement";
+				return 0;
+			}
+			
+			var a = getRegister( code[i][1], i );
+			var b = getRegister( code[i][2], i );
+
+			var c = a.concat(b);
+			//alert(c);
+						
+			var val = uVal(c);
+			console+=val+"<br/>";
+			
+			continue;
+		}
 		if (command == "sVal" ) {
 			var r = code[i][1].charAt(1);
 
@@ -1461,15 +1481,24 @@ function executeCode() {
 			continue;
 		}
 		if (command == "sVal64" ) {
-			var r = code[i][1].charAt(1);
-
-			// Check that register has been defined. If not, return.
-			if (!R[r][0]) {
-				console+="Line "+(i+1)+": Register undefined, can't calculate signed value. <br />";
-				return;
+			// Check for complete statement
+			if (!code[i][2]) {
+				console+="Line "+(i+1)+": Incomplete sVal64 statement";
+				return 0;
+			}
+			// Check that there are no extra arguments
+			if (code[i][3]) {
+				console+="Line "+(i+1)+": Extra token in sVal64 statement";
+				return 0;
 			}
 			
-			var val = sVal(R[r]);
+			var a = getRegister( code[i][1], i );
+			var b = getRegister( code[i][2], i );
+
+			var c = a.concat(b);
+			//alert(c);
+						
+			var val = sVal(c);
 			console+=val+"<br/>";
 			
 			continue;

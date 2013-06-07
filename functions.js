@@ -905,20 +905,20 @@ function clearFlags() {
 }
 
 // This function checks a string to see if it contains a valid register
-function checkRegister(string) {
+function getRegister(string, i) {
 	
 	if (string.charAt(0) == 'R') {		
 		if (string.charAt(1) >= 0 && string.charAt(1) <= 9) {
 			var index = string.charAt(1);
-			if (!R[index]) {
-				console += "Register not defined.";
+			if (R[index][0] == undefined) {
+				console += "Line "+(i+1)+": Register not defined.";
 				return 0;
 			}
 			return R[index];
 		}
 		console += "'"+string.charAt(0)+string.charAt(1)+"' is not a valid register.";
 	} else {
-		console += "Not a valid register.";
+		console += "Line "+(i+1)+": Not a valid register.";
 		return 0;
 	}
 	
